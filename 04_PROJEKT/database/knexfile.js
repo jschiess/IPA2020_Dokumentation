@@ -7,7 +7,7 @@ module.exports = {
 		version: '8.0',
 		connection: {
 			host: 'localhost',
-			database: 'kek',
+			database: 'inventory',
 			user: 'root',
 			password: 'admin',
 			insecureAuth: true,
@@ -22,18 +22,21 @@ module.exports = {
 	},
 
 	staging: {
-		client: 'postgresql',
+		client: 'mysql',
+		version: '8.0',
 		connection: {
-			database: 'my_db',
-			user: 'username',
-			password: 'password'
-		},
-		pool: {
-			min: 2,
-			max: 10
+			host: 'localhost',
+			database: 'kek',
+			user: 'root',
+			password: 'admin',
+			insecureAuth: true,
+			port: 3306
 		},
 		migrations: {
-			tableName: 'knex_migrations'
+			directory: './migrations'
+		},
+		seeds: {
+			directory: './seeds'
 		}
 	},
 
