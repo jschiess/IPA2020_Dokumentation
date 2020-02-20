@@ -1,60 +1,58 @@
-<template>
-<v-app>
-	<v-app-bar
-		app
-		color="primary"
-		dark
-	>
-		<div class="d-flex align-center">
-		<v-img
-			alt="Vuetify Logo"
-			class="shrink mr-2"
-			contain
-			src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-			transition="scale-transition"
-			width="40"
-		/>
-
-		<v-img
-			alt="Vuetify Name"
-			class="shrink mt-1 hidden-sm-and-down"
-			contain
-			min-width="100"
-			src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-			width="100"
-		/>
-		</div>
-
-		<v-spacer></v-spacer>
-
-		<v-btn
-		href="https://github.com/vuetifyjs/vuetify/releases/latest"
-		target="_blank"
-		text
-		>
-		<span class="mr-2">Latest Release</span>
-		<v-icon>mdi-open-in-new</v-icon>
-		</v-btn>
-	</v-app-bar>
-
-	<v-content>
-		<HelloWorld/>
-	</v-content>
-</v-app>
+<template lang='pug'>
+	v-app
+		Menu
+		v-content
+			router-view( v-on:login="login" v-on:message="message")
+		v-snackbar( top v-for="n in snacks" :key='snacks.indexOf(n)' v-model="snacks" :timeout='n.timeout' :color='n.type' ) {{ n.text }}
+			v-btn( @click="snacks.splice(snacks.indexOf(n)), 1" dark text) close
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 
+import Menu from './components/Menu.vue'
 export default {
-	name: 'App',
-
+	name: "Home",
 	components: {
-		HelloWorld,
+		Menu
 	},
+	data() {
+		return {
+			snacks: [],
+		};
+	},
+	computed: {
+		loggedIn() {return this.$store.state.loggedIn},
+		user() {return this.$store.state.user},
+	},
+	methods: {
+		message(message) {
+			this.snacks = (!this.snacks) ? [] : this.snacks
+			this.snacks.push(message);
+		},
+		login() {
+			this.message({
+				type: "success",
+				text: "logged in success",
+				timeout: 3000
+			});
+		},
+		logout() {
+			this.$store.dispatch('clearData')
+			this.message({
+				type: "success",
+				text: "logged out",
+				timeout: 2000
+			});
+			this.$router.push("/");
 
-	data: () => ({
-		//
-	}),
+		}
+	}
 };
-</script>
+</script> 
+<style>
+
+*{
+	font: 'Roboto 18pt'
+
+}
+</style>
