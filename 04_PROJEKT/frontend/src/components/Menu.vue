@@ -8,7 +8,7 @@
 					v-list-item-content 
 						v-list-item-title Eingelogged als {{user.username }}
 				v-divider
-				v-list-item(link to="/dashboard" )
+				v-list-item(link to="/" )
 					v-list-item-action()
 						v-icon(large ) mdi-view-dashboard-outline
 					v-list-item-content 
@@ -23,7 +23,7 @@
 						v-icon(large ) mdi-bookshelf
 					v-list-item-content 
 						v-list-item-title Ausleihungen
-				v-list-item(link to="/NewMaterial" )
+				v-list-item(link to="/newMaterial" )
 					v-list-item-action()
 						v-icon(large ) mdi-tray-full
 					v-list-item-content 
@@ -60,7 +60,7 @@ export default {
 		user() {return this.$store.state.user},
 	},
 	methods: {
-		logout() {this.$emit.logout},
+		logout() {this.$emit('logout')},
 	}
 };
 </script> 

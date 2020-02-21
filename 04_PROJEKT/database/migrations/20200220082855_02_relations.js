@@ -2,9 +2,9 @@
 exports.up = async function (knex) {
 	// relations for table itemsClass
 	await knex.schema.table('itemsClass', (table) => {
-		table.foreign('FK_type_ID').references('type.PK_type_ID');
+		table.foreign('FK_types_ID').references('types.PK_types_ID');
 		table.foreign('FK_locations_ID').references('locations.PK_locations_ID');
-		table.foreign('FK_manufacturer_ID').references('manufacturer.PK_manufacturer_ID');
+		table.foreign('FK_manufacturers_ID').references('manufacturers.PK_manufacturers_ID');
 	});
 
 	// relations for table users

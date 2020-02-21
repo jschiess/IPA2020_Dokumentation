@@ -17,7 +17,7 @@
 										v-icon( right ) mdi-login
 </template>
 <script>
-import axios from "@/api"
+import axios from "@/api";
 
 export default {
 	name: "home",
@@ -50,7 +50,7 @@ export default {
 				// emit to parent element to display message
 				
 				// send user to path home
-				this.$router.push("/home");
+				this.$router.push("/");
 				this.$emit('login')
 			}
 		}

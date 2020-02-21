@@ -18,5 +18,17 @@
 		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.20.10",
 		"mysql": "^2.18.1"
+	},
+	"nodemonConfig": {
+		"restartable": "rs",
+		"ignore": [
+			"node_modules/**/node_modules"
+		],
+		"delay": "2500",
+		"env": {
+			"NODE_ENV": "development",
+			"NODE_CONFIG_DIR": "./config",
+			"JWT_TOKEN": "Secret"
+		}
 	}
 }

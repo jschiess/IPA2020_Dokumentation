@@ -1,6 +1,6 @@
 <template lang='pug'>
 	v-app
-		Menu
+		Menu(v-on:logout='logout')
 		v-content
 			router-view( v-on:login="login" v-on:message="message")
 		v-snackbar( top v-for="n in snacks" :key='snacks.indexOf(n)' v-model="snacks" :timeout='n.timeout' :color='n.type' ) {{ n.text }}
@@ -37,13 +37,15 @@ export default {
 			});
 		},
 		logout() {
+			console.log('fuck');
+			
 			this.$store.dispatch('clearData')
 			this.message({
 				type: "success",
 				text: "logged out",
 				timeout: 2000
 			});
-			this.$router.push("/");
+			this.$router.push("/login");
 
 		}
 	}

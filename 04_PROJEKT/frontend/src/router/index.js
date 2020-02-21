@@ -6,24 +6,29 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: '/',
+		path: '/login',
 		name: 'login',
 		component: Login
 	},
 	{
-		path: '/dashboard',
+		path: '/',
 		name: 'dashboard',
 		component: () => import('../views/Dashboard.vue')
 	},
 	{
-		path: '/lager',
-		name: 'Lager',
-		component: () => import('../views/Lager.vue')
+		path: '/inventory',
+		name: 'Inventory',
+		component: () => import('../views/Inventory.vue')
 	},
 	{
 		path: '/lendings',
-		name: 'NewMaterial',
+		name: 'lendings',
 		component: () => import('../views/Lendings.vue')
+	},
+	{
+		path: '/newMaterial',
+		name: 'newMaterial',
+		component: () => import('../views/NewMaterial.vue')
 	},
 ]
 

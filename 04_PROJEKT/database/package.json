@@ -1,15 +1,17 @@
 {
-  "name": "database",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "knex": "^0.20.10",
-    "mysql": "^2.18.1"
-  }
+	"name": "database",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"bcrypt": "3.0.0",
+		"knex": "^0.20.10",
+		"mysql": "^2.18.1",
+		"uuid": "^3.4.0"
+	}
 }

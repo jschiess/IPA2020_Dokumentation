@@ -26,7 +26,7 @@
 			"error",
 			"tab"
 		],
-		"no-tabs": 2,
+		"no-tabs": 0,
 		"camelcase": 2,
 		"semi": 2,
 		"no-unused-vars": 2
