@@ -34,7 +34,6 @@ export default {
 		login: async function() {
 			// if the form has valid data
 			if (this.$refs.form.validate()) {
-				this.$emit('login')
 
 				// send request to /login
 				var response = await axios().post("/login", this.data);
@@ -48,10 +47,9 @@ export default {
 				this.$store.dispatch('login', {token, userData})
 
 				// emit to parent element to display message
-				
+				this.$emit("message", { type: "success", text: 'erfolgreich eingeloggt', timeout: 1000 });
 				// send user to path home
 				this.$router.push("/");
-				this.$emit('login')
 			}
 		}
 	}

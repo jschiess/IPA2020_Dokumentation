@@ -23,7 +23,7 @@
 						v-icon(large ) mdi-bookshelf
 					v-list-item-content 
 						v-list-item-title Ausleihungen
-				v-list-item(link to="/newMaterial" )
+				v-list-item(link to="/newMaterial" v-if='user.role ==="teacher"')
 					v-list-item-action()
 						v-icon(large ) mdi-tray-full
 					v-list-item-content 
@@ -48,11 +48,10 @@
 
 
 export default {
-	name: "menu",
+	name: "MainMenu",
 	data() {
 		return {
 			drawer: false
-
 		}
 	},
 	computed: {

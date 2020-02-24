@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 	if (typeof user !== 'undefined' && await bcrypt.compare(password, databasePassword)) {
 		// tokendata is send separate to the token
 		var tokenData = {
-			userID: user.PK_users_ID,
+			userId: user.PK_users_ID,
 			username: user.username,
 			role: user.rolesName
 		};

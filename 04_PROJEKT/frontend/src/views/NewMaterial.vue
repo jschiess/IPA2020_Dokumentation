@@ -12,24 +12,23 @@
 								v-row(justify='center'  dense wrap)
 									v-col(md='3')
 										v-switch(label='Neue Klasse?' v-model="isNewClass" color="secondary" )
-										v-autocomplete(v-if='!isNewClass' :rules='[v => !!v || "required field"]' outlined  v-model="form.classId" :items="classes" item-value='classId' item-text='className' label="Material klasse" append-icon="mdi-file-swap-outline")
-										v-text-field(v-else :rules='[v => !!v || "required field"]' outlined  v-model="form.className" item-value='classId' item-text='className' label="Material klasse" append-icon="mdi-file-swap-outline")
+										v-autocomplete(v-if='!isNewClass' :rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.itemsClassId" :items="itemsClass" item-value='itemsClassId' item-text='itemsClassName' label="Material klasse" append-icon="mdi-file-swap-outline")
 								v-divider
 								div(v-if="isNewClass")
 									v-row()
 									v-row(justify='center'  dense wrap)
 										v-col(md='3')
-											v-text-field(:rules='[v => !!v || "required field"]' color="primary"  outlined v-model="form.name" label='Name' append-icon="mdi-devices"  )
+											v-text-field(:rules='[v => !!v || "Fehlende Angaben"]' color="primary"  outlined v-model="form.itemsClassName" label='Klassen Name' append-icon="mdi-devices"  )
 										v-col(md='3')
-											v-autocomplete(:rules='[v => !!v || "required field"]' color="primary"  outlined  v-model="form.location" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" append-icon="mdi-office-building")
+											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary"  outlined  v-model="form.locationsId" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" append-icon="mdi-office-building")
 									v-row( justify='center' )
 										v-col(md='3')
-											v-autocomplete(:rules='[v => !!v || "required field"]' outlined  v-model="form.manufacturer" :items="manufacturers" item-value='manufacturerId' item-text='manufacturersName' label="Hersteller" append-icon="mdi-office-building")
+											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.manufacturersId" :items="manufacturers" item-value='manufacturersId' item-text='manufacturersName' label="Hersteller" append-icon="mdi-office-building")
 										v-col(md='3')
-											v-autocomplete(:rules='[v => !!v || "required field"]' outlined  v-model="form.type" :items="types" item-value='typeId' item-text='typesName' label="Typ" append-icon="mdi-office-building")
+											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.typesId" :items="types" item-value='typesId' item-text='typesName' label="Typ" append-icon="mdi-office-building")
 									v-row( justify='center' )
 										v-col(md='9') 
-											v-text-field(:rules='[v => !!v || "required field"]' outlined v-model="form.description"  label="Beschreibung" append-icon="mdi-card-text-outline") 
+											v-text-field(:rules='[v => !!v || "Fehlende Angaben"]' outlined v-model="form.description"  label="Beschreibung" append-icon="mdi-card-text-outline") 
 									v-row( justify='center' )
 										v-col(md='6')
 											v-row()
@@ -38,15 +37,13 @@
 													v-btn( color="error" @click.stop='cancel()' tile) cancel
 														v-icon(right) mdi-cancel
 												v-col(md='3')
-													v-btn( :disabled="!valid" :dark='valid' tile color="success" @click.stop='submitClass()' ) submit
+													v-btn( :disabled="!valid" :dark='valid' tile color="success" @click.stop='submitNewClass()' ) submit
 														v-icon( right ) mdi-email-send-outline
 								v-divider
 								div(v-if="!isNewClass" )
 									v-row( justify='center' )
 										v-col(md='3') 
-											v-text-field(:rules='[v => !!v || "required field"]' outlined v-model="form.serialNumber"  label="Seriennummer" append-icon="mdi-card-text-outline") 
-										v-col(md='3') 
-											v-text-field(:rules='[v => !!v || "required field"]' outlined v-model="form.description"  label="kommentar" append-icon="mdi-card-text-outline") 
+											v-text-field(:rules='[v => !!v || "Fehlende Angaben"]' outlined v-model="form.serialNumber"  label="Seriennummer" append-icon="mdi-card-text-outline") 
 									v-row(justify='center')
 										v-col(md='6')
 											v-row()
@@ -55,7 +52,7 @@
 													v-btn( color="error" @click.stop='cancel()' tile) cancel
 														v-icon(right) mdi-cancel
 												v-col(md='3')
-													v-btn( :disabled="!valid" :dark='valid' tile color="success" @click.stop='submitItem()' ) submit
+													v-btn( :disabled="!valid" dark tile color="success" @click.stop='submitNewItem()' ) submit
 														v-icon( right ) mdi-email-send-outline
 
 
@@ -63,48 +60,35 @@
 <script>
 import axios from "@/api";
 export default {
-	name: "home",
+	name: "NewMaterial",
 	data() {
 		return {
 			isNewClass: false,
 			classes: [],
 			item: {},
 			form: {
-				name: '',
-				location: ''
+				itemsClassId: '',
+
+
+				locationsId: '',
+				itemsClassName: '',
+				description: '',
+				manufacturersId: '',
+				typesId: ''
 			},
 			items: [],
-			headers: [
-				{ text: "id", value: "id" },
-				{ text: "uuid", value: "uuid" },
-				{ text: "className", value: "className" },
-				{ text: "itemsDescription", value: "itemsDescription", sortable: false },
-				{ text: "classDescription", value: "classDescription" },
-				{ text: "manufacturer", value: "manufacturer" },
-				{ text: "typ", value: "typ" },
-				// { text: "closet", value: "closet" },
-				// { text: "room", value: "room" },
-				{ text: 'location', value: 'location'},
-			],
 			locations: [],
 			valid: false,
 			manufacturers: [],
-			types: []
+			types: [],
+			itemsClass: [],
 			
 		};
-	},
-	computed: {
-		compoutedItems() {
-			var computed = this.items.filter((item) => {
-				return (!item.isReserved && !item.isInDevice)
-			})
-			return computed
-		}
 	},
 	methods: {
 		async loadLocations() {
 			try {
-				var response = await axios().get('/student/locations');
+				var response = await axios().get('/teacher/locations');
 				this.locations = response.data;
 			} catch (error) {
 				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
@@ -113,7 +97,7 @@ export default {
 		},
 		async loadManufacturers() {
 			try {
-				var response = await axios().get('/student/manufacturers');
+				var response = await axios().get('/teacher/manufacturers');
 				this.manufacturers = response.data;
 			} catch (error) {
 				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
@@ -122,40 +106,69 @@ export default {
 		},
 		async loadTypes() {
 			try {
-				var response = await axios().get('/student/types');
+				var response = await axios().get('/teacher/types');
 				this.types = response.data;
 			} catch (error) {
 				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
 				console.error(error);
 			}
 		},
-
-		async loadItems() {
+		async loadItemsClass() {
 			try {
-				var response = await axios().get("/student/inventory")
-				this.items = response.data;
+				var response = await axios().get('/teacher/itemsClass');
+				this.itemsClass = response.data;
 			} catch (error) {
 				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
 				console.error(error);
 			}
 		},
+		
 		cancel() {
 			this.form = {};
 			this.valid = false;
 		},
+		
 		async submitNewClass() {
 			if(this.$refs.form.validate()) {
+				var data = {
+					itemsClassName: this.form.itemsClassName,
+					description: this.form.description,
+					FK_locations_ID: this.form.locationsId,
+					FK_manufacturers_ID: this.form.manufacturersId,
+					FK_types_ID: this.form.typesId,
+				}
 				try {
-					await axios().post('/admin/inventory/devices', this.form)
+					await axios().post('/teacher/itemsClass/', data)
+					this.loadItemsClass()
 					this.$emit("message", { type: "success", text: 'new entry created', timeout: 2000 });
-					
 				} catch (error) {
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
 				}
 			}
 		},
 		async submitNewItem() {
-		
+			if(this.$refs.form.validate()) {
+				var data = {
+					serialNumber: this.form.serialNumber,
+					FK_itemsClass_ID: this.form.itemsClassId
+				}
+
+				try {
+					// console.log(data);
+					await axios().post('/teacher/items', data)
+
+					// success  message
+					this.$emit("message", { type: "success", text: 'Eintrag erstellt', timeout: 1000 });
+					this.form.serialNumber = '';
+					this.$refs.form.reset()
+
+					// if error
+				} catch (error) {
+					// submit message
+					console.error(error);
+					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				}
+			}
 		}
 	},
 	async mounted() {
@@ -169,8 +182,8 @@ export default {
 		// retrieves types and mounts them in vue
 		this.loadTypes()
 
-		// retrieves types and mounts them in vue
-		this.loadItems()
+		// retrieves itmesclasses and mounts them in vue
+		this.loadItemsClass()
 	},
 };
 </script> 

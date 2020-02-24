@@ -7,32 +7,37 @@
 						v-data-table( 
 						:search="search"
 						:items-per-page='999'
-						item-key='classId'
+						item-key='PK_itemsClass_ID'
 						:expanded.sync="expanded" 
 						show-expand 
 						:loading='loading' 
 						:items='filteredItems'
 						:headers='headers'
 						)
-							
 							template( v-slot:expanded-item="{ headers, item }" )
 								td(  style="padding:5px 10px;" :colspan='headers.length' )
 									v-data-table(
 										dense 
 										:search="search"
 										show-select
-										item-key='itemId'
+										item-key='PK_items_ID'
 										:items-per-page=1000
 										class="elevation-0" 
 										:items='item.items' 
 										:headers='subheaders' 
-										hide-default-footer
+										hide-default-footers
 										v-model="selectedItems" 
 										)
+										template(v-slot:item.action='{ item }' v-if='user.role === "teacher"') 
+											v-btn.elevation-0( @click="deleteItem( item )" small tile color="red" dark ) x
+											
+										
+										template(v-slot:item.data-table-select='{  isSelected, select, item }') 
+											v-simple-checkbox( :disabled='item.lentTo' :value="isSelected")
 										template( v-slot:item.serialnumber="{ item }" )
-											v-edit-dialog(@open) {{ item.serialnumber}}
+											v-edit-dialog(@save='changeItem(item)') {{ item.serialnumber}}
 												template(v-slot:input)
-													v-text-field(counter label='edit' )
+													v-text-field(counter label='edit' v-model='item.serialnumber') 
 							template(v-slot:top)
 								v-row()
 									v-spacer()
@@ -44,7 +49,7 @@
 										v-btn(dark color="success" v-if='user.role === "teacher"' link to="/newMaterial" ) new device
 											v-icon( right ) mdi-plus
 									v-col( md="2" lg="2" sm="2" )
-										v-btn( @click="reserveItems" color="secondary lighten-1"  :disabled='!selectedItems.length' ) Ausleihen
+										v-btn( @click="lendItems" color="secondary lighten-1"  :disabled='!selectedItems.length' ) Ausleihen
 											v-icon(right ) mdi-plus
 											
 
@@ -71,9 +76,11 @@ export default {
 				{ text: "", value: "data-table-expand" }
 			],
 			subheaders: [
-				{ text: "Id", value: "PK_itemsClass_ID" },
+				{ text: "Id", value: "PK_items_ID" },
 				{ text: "serialnumber", value: "serialnumber" },
-				{ text: 'Ausgeliehen von', value: 'lentTo'},
+				{ text: 'Ausgeliehen von', value: 'username'},
+				{ text: '', value: 'action'},
+				
 			],
 			search: "",
 			loading: true,
@@ -84,23 +91,80 @@ export default {
 		user: function() {return this.$store.state.user},
 		filteredItems: function () {return this.items}
 	},
-	async mounted() {
-		try {
-			var response = await axios().get("/student/inventory")
 
-		} catch (error) {
-			// send message to parent prop
-			console.error(error);
-			this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-		}
+	async mounted() {
+		this.loadItems()
 		// disable loading 
 		this.loading = false
-		//set itmes
-		this.items = response.data;
 	},
 	methods: {
-		reserveItems: async () => {
+		async loadItems() {
+			try {
+				var response = await axios().get("/student/inventory")
+			} catch (error) {
+				// send message to parent prop
+				console.error(error);
+				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+			}
+			//set itmes
+			this.items = response.data;	
+		},
+		// deletes the item form the lendings
+		async deleteItem(item){
+			// asks for confirmation
+			if(confirm('sind sie sicher?')) {
+				try {
+					// delete entry
+					await axios().delete('/teacher/inventory/'+ item.PK_items_ID)
+					// removes the item from the lokal storage
+					this.loadItems()
+					this.select
+				
+				} catch (error) {
+					console.error(error);
+					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+
+				}
+			}
+		},
+		async changeItem(item) {
 			
+			if(confirm('sind sie sicher?')) {
+				// delete entry
+				
+				try {
+					await axios().put('/teacher/inventory/'+ item.PK_items_ID, item)
+				
+				} catch (error) {
+					console.error(error);
+					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				}
+
+				// removes the item from the lokal storage
+				this.loadItems()
+			}
+			
+		},
+
+		async lendItems() {
+
+			var idList = this.selectedItems.map(item => item['PK_items_ID']) 
+			console.log(idList);
+			
+			
+			
+			try {
+				await axios().post('/student/lendings/', idList )
+
+				this.$emit("message", { type: "success", text: 'Material ausgeliehen', timeout: 2000 });
+			} catch (error) {
+				console.error(error);
+				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+			}
+			this.selectedItems = [];
+			// redownload items
+			this.loadItems()
+
 		},
 	}
 }

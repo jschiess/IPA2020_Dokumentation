@@ -1,26 +1,27 @@
 <template lang='pug'>
 	v-app
-		Menu(v-on:logout='logout')
+		MainMenu(v-on:logout='logout')
 		v-content
-			router-view( v-on:login="login" v-on:message="message")
-		v-snackbar( top v-for="n in snacks" :key='snacks.indexOf(n)' v-model="snacks" :timeout='n.timeout' :color='n.type' ) {{ n.text }}
+			router-view( v-on:message="message")
+		v-snackbar( top v-for="snack in snacks" :key='snacks.indexOf(snack)' v-model="snacks" :timeout='snack.timeout' :color='snack.type' ) {{ snack.text }}
 			v-btn( @click="snacks.splice(snacks.indexOf(n)), 1" dark text) close
 </template>
 
 <script>
 
-import Menu from './components/Menu.vue'
+import MainMenu from './components/Menu.vue'
+
 export default {
 	name: "Home",
 	components: {
-		Menu
+		MainMenu
 	},
 	data() {
 		return {
 			snacks: [],
 		};
 	},
-	computed: {
+	computed: { 
 		loggedIn() {return this.$store.state.loggedIn},
 		user() {return this.$store.state.user},
 	},
@@ -29,16 +30,7 @@ export default {
 			this.snacks = (!this.snacks) ? [] : this.snacks
 			this.snacks.push(message);
 		},
-		login() {
-			this.message({
-				type: "success",
-				text: "logged in success",
-				timeout: 3000
-			});
-		},
 		logout() {
-			console.log('fuck');
-			
 			this.$store.dispatch('clearData')
 			this.message({
 				type: "success",
