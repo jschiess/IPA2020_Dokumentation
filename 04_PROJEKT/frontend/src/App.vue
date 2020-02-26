@@ -1,9 +1,16 @@
 <template lang='pug'>
-	v-app
-		MainMenu(v-on:logout='logout')
-		v-content
+	v-app()
+		MainMenu(v-on:logout='logout' v-if='loggedIn')
+		v-content()
 			router-view( v-on:message="message")
-		v-snackbar( top v-for="snack in snacks" :key='snacks.indexOf(snack)' v-model="snacks" :timeout='snack.timeout' :color='snack.type' ) {{ snack.text }}
+		v-snackbar( 
+			top 
+			v-for="snack in snacks" 
+			:key='snacks.indexOf(snack)' 
+			v-model="snacks" 
+			:timeout='snack.timeout' 
+			:color='snack.type' 
+		) {{ snack.text }}
 			v-btn( @click="snacks.splice(snacks.indexOf(n)), 1" dark text) close
 </template>
 
@@ -18,12 +25,15 @@ export default {
 	},
 	data() {
 		return {
+			// array for the snackbar messages
 			snacks: [],
 		};
 	},
 	computed: { 
-		loggedIn() {return this.$store.state.loggedIn},
-		user() {return this.$store.state.user},
+		// checks if the user is logged in or not
+		loggedIn: function() {return this.$store.state.loggedIn},
+		// gets global user information username, role etc..
+		user: function() {return this.$store.state.user},
 	},
 	methods: {
 		message(message) {

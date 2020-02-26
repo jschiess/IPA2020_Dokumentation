@@ -1,9 +1,11 @@
 <template lang='pug'>
+	//- basic layout
 	v-content
 		v-container(fill-height)
 			v-row( justify='center' wrap align='center')
 				v-col( cols='12' md='12' sm='12' )
 					v-card.elevation-3
+						//-  parent data table
 						v-data-table( 
 						:search="search"
 						:items-per-page='999'
@@ -11,7 +13,7 @@
 						:expanded.sync="expanded" 
 						show-expand 
 						:loading='loading' 
-						:items='filteredItems'
+						:items='items'
 						:headers='headers'
 						)
 							template( v-slot:expanded-item="{ headers, item }" )
@@ -27,13 +29,15 @@
 										:headers='subheaders' 
 										hide-default-footers
 										v-model="selectedItems" 
-										)
+										) 
+										//- custom changes to defualt template
+										template(v-slot:header.data-table-select='item')
 										template(v-slot:item.action='{ item }' v-if='user.role === "teacher"') 
 											v-btn.elevation-0( @click="deleteItem( item )" small tile color="red" dark ) x
 											
 										
 										template(v-slot:item.data-table-select='{  isSelected, select, item }') 
-											v-simple-checkbox( :disabled='item.lentTo' :value="isSelected")
+											v-simple-checkbox( :disabled='!!item.lentTo' :value="isSelected" @input="select($event)")
 										template( v-slot:item.serialnumber="{ item }" )
 											v-edit-dialog(@save='changeItem(item)') {{ item.serialnumber}}
 												template(v-slot:input)
@@ -56,10 +60,12 @@
 </template>
 
 <script>
+// packgae imports
 import axios from "@/api";
 
 export default {
-	name: 'inventory',
+	name: 'Inventory',
+	// Data 
 	data() {
 		return {
 			expanded: [],
@@ -86,10 +92,12 @@ export default {
 			loading: true,
 		};
 	},
+	// dynamic data
 	computed: {
+		// checks if the user is logged in or not
 		loggedIn: function() {return this.$store.state.loggedIn},
+		// gets global user information username, role etc..
 		user: function() {return this.$store.state.user},
-		filteredItems: function () {return this.items}
 	},
 
 	async mounted() {
@@ -115,10 +123,10 @@ export default {
 			if(confirm('sind sie sicher?')) {
 				try {
 					// delete entry
-					await axios().delete('/teacher/inventory/'+ item.PK_items_ID)
+					await axios().delete('/teacher/inventory/'+ item.PK_items_ID);
 					// removes the item from the lokal storage
-					this.loadItems()
-					this.select
+					this.loadItems();
+					this.selectedItems = '';
 				
 				} catch (error) {
 					console.error(error);
@@ -127,14 +135,17 @@ export default {
 				}
 			}
 		},
+		// alters item 
 		async changeItem(item) {
-			
+			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
 				// delete entry
 				
 				try {
+					// axios request
 					await axios().put('/teacher/inventory/'+ item.PK_items_ID, item)
 				
+
 				} catch (error) {
 					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
@@ -145,18 +156,16 @@ export default {
 			}
 			
 		},
-
+		// lends an item
 		async lendItems() {
 
 			var idList = this.selectedItems.map(item => item['PK_items_ID']) 
-			console.log(idList);
-			
-			
-			
+
+
 			try {
 				await axios().post('/student/lendings/', idList )
 
-				this.$emit("message", { type: "success", text: 'Material ausgeliehen', timeout: 2000 });
+				this.$emit("message", { type: "success", text: 'Material ausgeliehen', timeout: 1000 });
 			} catch (error) {
 				console.error(error);
 				this.$emit("message", { type: "error", text: error.message, timeout: 0 });

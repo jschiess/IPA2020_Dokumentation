@@ -99,15 +99,10 @@ router.put('/inventory/:id', async (req, res) => {
 
 // add new items
 router.post('/items', async (req, res) => {
-
-	console.log('working');
-
 	var {
 		serialNumber,
 		FK_itemsClass_ID
 	} = req.body;
-	console.log(req.body);
-
 
 	try {
 		// insert statement into knex

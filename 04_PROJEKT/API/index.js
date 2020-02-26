@@ -17,11 +17,10 @@ var publicRoutes = require('./routes/public');
 // global variable declaration
 const PORT = 3000;
 
-
 // initialize the library
 var app = express();
 
-
+// use cors 
 app.use(cors());
 
 // logger

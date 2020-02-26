@@ -41,16 +41,35 @@ const router = new VueRouter({
 	routes
 })
 
+
+// routeguarding
 router.beforeEach((to, from, next) => {
+	// pages accessable to everyone
 	const publicPages = ['/login']
+	// teacher routes
+	const teacherRoutes = ['/newMaterial']
+	// if a page is not in the public pages array, it requires login
 	const authRequired = !publicPages.includes(to.path);
-
+	// checks if the user is loggedIn
 	const loggedIn = store.state.token
+	// checks if the user is a teacher
+	const isTeacher = store.state.role === 'teacher'
 
+	// if the user is not logged in and if authorization is required
 	if (authRequired && !loggedIn) {
+		// send user to login page
 		return next('/login')
+		// or if the user is logged in and is going to the login page
+	} else if (loggedIn && to.path === '/login') {
+		// it redirects him to the dashboard
+		next('/')
+		// if not a teacher and trying to access teacher route
+	} else if (!isTeacher && teacherRoutes.includes(to.path)) {
+		next(from.path)
 	}
+	// if none apply it continues
 	next();
 })
+
 
 export default router

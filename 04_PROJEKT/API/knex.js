@@ -1,4 +1,4 @@
-
+// configuration
 var config = {
 	client: 'mysql',
 	version: '8.0',
@@ -11,7 +11,5 @@ var config = {
 		port: 3306
 	}
 };
-var knex = require('knex')(config);
-
-
-module.exports = knex;
+// esport
+module.exports = require('knex')(config);

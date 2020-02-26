@@ -35,21 +35,29 @@ export default {
 			// if the form has valid data
 			if (this.$refs.form.validate()) {
 
-				// send request to /login
-				var response = await axios().post("/login", this.data);
+				try {
+				
+					// send request to /login
+					var response = await axios().post("/login", this.data);
 
-				// get token from response.data
-				var token = response.data.auth.split(" ")[1];
-				var userData = response.data.tokenData
-				// var user = response.data.user;
+					// get token from response.data
+					var token = response.data.auth.split(" ")[1];
+					var userData = response.data.tokenData
+					// var user = response.data.user;
 
-				// save token in vuex store 
-				this.$store.dispatch('login', {token, userData})
+					// save token in vuex store 
+					this.$store.dispatch('login', {token, userData})
 
-				// emit to parent element to display message
-				this.$emit("message", { type: "success", text: 'erfolgreich eingeloggt', timeout: 1000 });
-				// send user to path home
-				this.$router.push("/");
+					// emit to parent element to display message
+					this.$emit("message", { type: "success", text: 'erfolgreich eingeloggt', timeout: 1000 });
+					// send user to path home
+					this.$router.push("/");
+				} catch (error) {
+					this.data.password = ''
+					// send message to parent prop
+					console.error(error);
+					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				}
 			}
 		}
 	}
