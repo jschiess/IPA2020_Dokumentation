@@ -101,7 +101,8 @@ router.put('/inventory/:id', async (req, res) => {
 router.post('/items', async (req, res) => {
 	var {
 		serialNumber,
-		FK_itemsClass_ID
+		FK_itemsClass_ID,
+		FK_locations_ID,
 	} = req.body;
 
 	try {
@@ -109,6 +110,7 @@ router.post('/items', async (req, res) => {
 		await knex('items').insert({
 			serialNumber,
 			FK_itemsClass_ID,
+			FK_locations_ID
 		});
 
 		// send status 200
@@ -137,7 +139,6 @@ router.post('/itemsClass', async (req, res) => {
 		await knex('itemsClass').insert({
 			itemsClassName,
 			description,
-			FK_locations_ID,
 			FK_manufacturers_ID,
 			FK_types_ID,
 		});

@@ -1,10 +1,9 @@
 <template lang='pug'>
 	//- basic layout 
 	v-content
-		v-container(fill-height) 
+		v-container(fill-height)
 			v-row( justify='center' wrap align='center')
 				v-col( cols='12' md='12' sm='12' )
-
 					v-card.elevation-3()
 						//- main data table
 						v-data-table( 
@@ -14,18 +13,19 @@
 							:loading='loading' 
 							:items='filteredItems'
 							:headers='headers'
-						)
-
+							)
 							//- Custom displays
 							template( v-slot:item.actions='{ item }') 
-								v-btn.elevation-0( @click="deleteLending( item )"  icon  )
-									v-icon() mdi-trash-can-outline
+								v-btn.elevation-0( @click="deleteLending( item )" name="Rückgabe"   icon  )
+									v-icon() mdi-keyboard-tab
 							template(v-slot:top)
 								v-row(justify='center')
 									v-col( md='5') 
 										v-text-field(v-model="search" solo label='Search' append-icon="mdi-layers-search-outline" )
 									v-col(md='2' v-if='user.role === "teacher"')
 										v-switch(v-model="showAllItems" label='alle anzeigen')
+			
+					
 </template>
 
 <script>
@@ -43,15 +43,14 @@ export default {
 			selectedItems: [],
 			items: [],
 			headers: [
-				{ text: "itemId", value: "itemId" },
-				{ text: 'typ', value: 'typesName'},
+				{ text: "ID", value: "itemId" },
+				{ text: 'Typ', value: 'typesName'},
 				{ text: 'Hersteller', value: 'manufacturersName'},
-				{ text: 'Standort', value: 'locationsName'},
-				{ text: 'beschreibung', value: 'description'},
-				{ text: "classId", value: "itemId" },
-				{ text: "serialnumber", value: "serialNumber" },
-				{ text: "lentTo", value: 'username'},
-				{ text: '', value: 'actions'},
+				{ text: 'Ablageort', value: 'locationsName'},
+				{ text: 'Beschreibung', value: 'description'},
+				{ text: "Serialnummer", value: "serialNumber" },
+				{ text: "Ausgeliehen von", value: 'username'},
+				{ text: 'aktion', value: 'actions'},
 			],
 			search: "",
 			loading: true,

@@ -18,8 +18,7 @@
 									v-row(justify='center'  dense wrap)
 										v-col(md='3')
 											v-text-field(:rules='[v => !!v || "Fehlende Angaben"]' color="primary"  outlined v-model="form.itemsClassName" label='Klassen Name' append-icon="mdi-devices"  )
-										v-col(md='3')
-											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary"  outlined  v-model="form.locationsId" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" )
+										
 									v-row( justify='center' )
 										v-col(md='3')
 											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.manufacturersId" :items="manufacturers" item-value='manufacturersId' item-text='manufacturersName' label="Hersteller" )
@@ -32,19 +31,21 @@
 										v-col(md='8')
 											v-row()
 												v-spacer
-												v-btn( color="error" @click.stop='cancel()' tile) cancel
-												v-btn( :disabled="!valid"  tile color="success" @click.stop='submitNewClass()' ) submit
+												v-btn( color="error" @click.stop='cancel()' tile) Abbrechen
+												v-btn( :disabled="!valid"  tile color="success" @click.stop='submitNewClass()' ) Erfassen
 								v-divider
 								div(v-if="!isNewClass" )
 									v-row( justify='center' )
 										v-col(md='3') 
 											v-text-field(:rules='[v => !!v || "Fehlende Angaben"]' outlined v-model="form.serialNumber"  label="Seriennummer" append-icon="mdi-card-text-outline") 
+										v-col(md='3')
+											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary"  outlined  v-model="form.locationsId" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" )
 									v-row(justify='center')
 										v-col(md='3')
 											v-row()
 												v-spacer
-												v-btn( color="error" @click.stop='cancel()' tile) cancel
-												v-btn( :disabled="!valid"  tile color="success" @click.stop='submitNewItem()' ) submit
+												v-btn( color="error" @click.stop='cancel()' tile) Abbrechen
+												v-btn( :disabled="!valid"  tile color="success" @click.stop='submitNewItem()' ) Erfassen
 
 
 </template>
@@ -131,14 +132,13 @@ export default {
 				var data = {
 					itemsClassName: this.form.itemsClassName,
 					description: this.form.description,
-					FK_locations_ID: this.form.locationsId,
 					FK_manufacturers_ID: this.form.manufacturersId,
 					FK_types_ID: this.form.typesId,
 				}
 				try {
 					await axios().post('/teacher/itemsClass/', data)
 					this.loadItemsClass()
-					this.$emit("message", { type: "success", text: 'new entry created', timeout: 1000 });
+					this.$emit("message", { type: "success", text: 'material erfolgreich erfasst', timeout: 1000 });
 				} catch (error) {
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
 				}
@@ -151,6 +151,7 @@ export default {
 					// define request data
 					var data = {
 						serialNumber: this.form.serialNumber,
+						FK_locations_ID: this.form.locationsId,
 						FK_itemsClass_ID: this.form.itemsClassId
 					}
 					// send request

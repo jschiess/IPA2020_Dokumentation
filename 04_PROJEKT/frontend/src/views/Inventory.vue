@@ -34,8 +34,6 @@
 										template(v-slot:header.data-table-select='item')
 										template(v-slot:item.action='{ item }' v-if='user.role === "teacher"') 
 											v-btn.elevation-0( @click="deleteItem( item )" small tile color="red" dark ) x
-											
-										
 										template(v-slot:item.data-table-select='{  isSelected, select, item }') 
 											v-simple-checkbox( :disabled='!!item.lentTo' :value="isSelected" @input="select($event)")
 										template( v-slot:item.serialnumber="{ item }" )
@@ -51,10 +49,8 @@
 									v-spacer
 									v-col( md="2" lg="2" sm="2"  )
 										v-btn(dark color="success" v-if='user.role === "teacher"' link to="/newMaterial" ) new device
-											v-icon( right ) mdi-plus
 									v-col( md="2" lg="2" sm="2" )
 										v-btn( @click="lendItems" color="secondary lighten-1"  :disabled='!selectedItems.length' ) Ausleihen
-											v-icon(right ) mdi-plus
 											
 
 </template>
@@ -77,15 +73,15 @@ export default {
 				{ text: "name", value: "itemsClassName" },
 				{ text: 'typ', value: 'typesName'},
 				{ text: 'Hersteller', value: 'manufacturersName'},
-				{ text: 'Standort', value: 'locationsName'},
 				{ text: 'beschreibung', value: 'description'},
 				{ text: "", value: "data-table-expand" }
 			],
 			subheaders: [
 				{ text: "Id", value: "PK_items_ID" },
 				{ text: "serialnumber", value: "serialnumber" },
+				{ text: "Ablageort", value: "locationsName" },
 				{ text: 'Ausgeliehen von', value: 'username'},
-				{ text: '', value: 'action'},
+				{ text: 'aktion', value: 'action'},
 				
 			],
 			search: "",

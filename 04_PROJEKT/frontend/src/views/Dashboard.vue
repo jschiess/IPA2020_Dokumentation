@@ -11,25 +11,30 @@
 										v-img(contain height="auto"  :src="require('../assets/tflogo.jpg')")
 								v-card-title(color="lighten-2" )
 									h1.grey--text Hallo {{ user.username }}
+					v-divider
 					v-row 
 						v-col
 							v-card.white--text.py-12(link to='/inventory' color="purple darken-2" shaped hover)
 								v-card-title 
+									v-icon(left x-large dark) mdi-warehouse
 									h1 Lager
 								v-spacer
-								v-card-subtitle.white--text Einsicht auf alle Items
+								v-card-subtitle.white--text(v-if='user.role === "teacher"') Einsicht auf alle Items. Materialen bearbeiten, löschen, Ausleihungen machen
+								v-card-subtitle.white--text(v-else) Einsicht auf alle Items
 						v-col(v-if='user.role == "teacher"')
 							v-card.white--text.py-12( link to='/newMaterial' color="green darken-2" shaped hover )
 								v-card-title 
+									v-icon(left x-large dark) mdi-tray-full
 									h1 Erfassen
 								v-spacer
-								v-card-subtitle.white--text Material Erfassen
+								v-card-text.white--text Material oder klassen erfassen
 						v-col
 							v-card.white--text.py-12(link to="/Lendings"  color="yellow darken-4 " shaped hover)
 								v-card-title
-									h1 Ausleihungen
+									v-icon(left x-large dark) mdi-bookshelf
+									h1 Ausleihliste
 								v-spacer
-								v-card-subtitle.white--text Einsicht auf ausgeliehenes Material
+								v-card-text.white--text Einsicht auf ausgeliehenes Material. Rückgaben machen
 </template>
 
 <script>

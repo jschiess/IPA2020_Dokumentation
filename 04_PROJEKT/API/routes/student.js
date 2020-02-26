@@ -44,7 +44,6 @@ router.get('/inventory', async (req, res) => {
 			itemsClassName: temp[index][0].itemsClassName,
 			manufacturersName: temp[index][0].manufacturersName,
 			typesName: temp[index][0].typesName,
-			locationsName: temp[index][0].locationsName,
 			description: temp[index][0].description,
 			items: temp[index]
 		});

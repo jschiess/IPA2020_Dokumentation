@@ -49,7 +49,6 @@ exports.up = async function (knex) {
 		// foreign keys
 		table.integer('FK_types_ID')
 		table.integer('FK_manufacturers_ID')
-		table.integer('FK_locations_ID')
 	});
 	await knex.raw("ALTER TABLE `inventory`.`itemsClass` CHANGE COLUMN `PK_itemsClass_ID` `PK_itemsClass_ID` INT(11) NOT NULL AUTO_INCREMENT")
 
@@ -60,6 +59,7 @@ exports.up = async function (knex) {
 		table.timestamp('createdAt').defaultTo(knex.fn.now());
 
 		// foreign keys
+		table.integer('FK_locations_ID')
 		table.integer('FK_itemsClass_ID')
 		table.integer('lentTo')
 	});

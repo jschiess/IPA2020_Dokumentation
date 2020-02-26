@@ -17,12 +17,12 @@
 					v-list-item-action()
 						v-icon( large ) mdi-warehouse
 					v-list-item-content 
-						v-list-item-title Lager
+						v-list-item-title Inventar
 				v-list-item(link to="/lendings" )
 					v-list-item-action()
 						v-icon(large ) mdi-bookshelf
 					v-list-item-content 
-						v-list-item-title Ausleihungen
+						v-list-item-title Ausleihliste
 				v-list-item(link to="/newMaterial" v-if='user.role ==="teacher"')
 					v-list-item-action()
 						v-icon(large ) mdi-tray-full

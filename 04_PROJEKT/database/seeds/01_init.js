@@ -47,8 +47,7 @@ exports.seed = async function (knex) {
 					itemsClassName: 'Raspberry PI model 3s 16gb ram',
 					description: 'micro computer',
 					FK_types_ID: 3,
-					FK_manufacturers_ID: 3,
-					FK_locations_ID: 2
+					FK_manufacturers_ID: 3
 				},
 			]);
 		});
@@ -60,6 +59,7 @@ exports.seed = async function (knex) {
 			return knex('items').insert([
 				{
 					serialnumber: '12312353453463456567567823324',
+					FK_locations_ID: 1,
 					FK_itemsClass_ID: 1,
 				},
 			]);
