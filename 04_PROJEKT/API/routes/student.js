@@ -14,7 +14,27 @@ router.get('/inventory', async (req, res) => {
 			.join('manufacturers', 'PK_manufacturers_ID', 'FK_manufacturers_ID')
 			.join('locations', 'PK_locations_ID', 'FK_locations_ID')
 			.leftJoin('users', 'PK_users_ID', 'lentTo')
-			.select('*');
+			.select(
+				'PK_items_ID',
+				'serialnumber',
+				'createdAt',
+				'FK_locations_ID',
+				'FK_itemsClass_ID',
+				'lentTo',
+				'PK_itemsClass_ID',
+				'itemsClassName',
+				'description',
+				'FK_types_ID',
+				'FK_manufacturers_ID',
+				'PK_types_ID',
+				'typesName',
+				'PK_manufacturers_ID',
+				'manufacturersName',
+				'PK_locations_ID',
+				'locationsName',
+				'PK_users_ID',
+				'username',
+			);
 		// converting data
 		// variable declaration
 		var temp = {};

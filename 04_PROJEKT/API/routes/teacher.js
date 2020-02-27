@@ -4,6 +4,7 @@ var express = require('express');
 var knex = require('../knex');
 // initialize router
 var router = express.Router();
+
 // get all locations
 router.get('/locations', async (req, res) => {
 	try {
@@ -89,11 +90,18 @@ router.get('/lendings', async (req, res) => {
 	res.send(result);
 });
 
+
+
 // edit item
 router.put('/inventory/:id', async (req, res) => {
 	// get id from url
 	var id = req.params.id;
 	var serialnumber = req.body.serialnumber;
+	var locationsId = req.body.FK_locations_ID;
+	console.log(req.body);
+
+	console.log(locationsId, serialnumber);
+
 	try {
 		// database request
 		await knex('items')
@@ -101,9 +109,9 @@ router.put('/inventory/:id', async (req, res) => {
 			.where('PK_items_ID', '=', id)
 			// update serialnumber
 			.update({
+				FK_locations_ID: locationsId,
 				serialnumber: serialnumber
 			});
-
 		// error handling
 	} catch (error) {
 		// log error
@@ -128,6 +136,50 @@ router.post('/items', async (req, res) => {
 			serialNumber,
 			FK_itemsClass_ID,
 			FK_locations_ID
+		});
+
+		// send Status 200
+		res.sendStatus(200);
+		// error handling
+	} catch (error) {
+		// log error
+		console.error(error);
+		// send Status 500
+		res.sendStatus(500);
+	}
+});
+
+
+// add new items
+router.post('/manufacturers', async (req, res) => {
+	var {
+		manufacturersName,
+	} = req.body;
+	try {
+		// database request
+		await knex('manufacturers').insert({
+			manufacturersName
+		});
+
+		// send Status 200
+		res.sendStatus(200);
+		// error handling
+	} catch (error) {
+		// log error
+		console.error(error);
+		// send Status 500
+		res.sendStatus(500);
+	}
+});
+
+router.post('/types', async (req, res) => {
+	var {
+		typesName,
+	} = req.body;
+	try {
+		// database request
+		await knex('manufacturers').insert({
+			typesName
 		});
 
 		// send Status 200

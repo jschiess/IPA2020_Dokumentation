@@ -40,6 +40,10 @@
 											v-edit-dialog(@save='changeItem(item)') {{ item.serialnumber}}
 												template(v-slot:input)
 													v-text-field(counter label='edit' v-model='item.serialnumber') 
+										template( v-slot:item.locationsName="{ item }" )
+											v-edit-dialog(@save='changeItem(item)') {{ item.locationsName}}
+												template(v-slot:input)
+													v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary" v-model="item.FK_locations_ID" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" )
 							template(v-slot:top)
 								v-row()
 									v-spacer()
@@ -86,6 +90,7 @@ export default {
 			],
 			search: "",
 			loading: true,
+			locations: [],
 		};
 	},
 	// dynamic data
@@ -95,13 +100,28 @@ export default {
 		// gets global user information username, role etc..
 		user: function() {return this.$store.state.user},
 	},
-
+	// loads the locations from the api
+	
 	async mounted() {
+		// load items
 		this.loadItems()
+
+		// loadlocations
+		this.loadLocations()
+
 		// disable loading 
 		this.loading = false
 	},
 	methods: {
+		async loadLocations() {
+			try {
+				var response = await axios().get('/teacher/locations');
+				this.locations = response.data;
+			} catch (error) {
+				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				console.error(error);
+			}
+		},
 		async loadItems() {
 			try {
 				var response = await axios().get("/student/inventory")
@@ -119,15 +139,13 @@ export default {
 			if(confirm('sind sie sicher?')) {
 				try {
 					// delete entry
-					await axios().delete('/teacher/inventory/'+ item.PK_items_ID);
+					await axios().delete('/teacher/inventory/'+ item);
 					// removes the item from the lokal storage
 					this.loadItems();
 					this.selectedItems = '';
-				
 				} catch (error) {
 					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-
 				}
 			}
 		},
@@ -136,7 +154,6 @@ export default {
 			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
 				// delete entry
-				
 				try {
 					// axios request
 					await axios().put('/teacher/inventory/'+ item.PK_items_ID, item)
