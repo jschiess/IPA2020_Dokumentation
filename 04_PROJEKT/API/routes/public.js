@@ -7,7 +7,6 @@ var jwt = require('jsonwebtoken');
 // initialize router
 var router = express.Router();
 
-
 // login path
 router.post('/login', async (req, res) => {
 	// get username and password from body
@@ -22,7 +21,6 @@ router.post('/login', async (req, res) => {
 		// database password is read out of the database
 		var databasePassword = user.password;
 	} catch (error) {
-
 		// log error
 		console.error(error);
 
@@ -47,7 +45,6 @@ router.post('/login', async (req, res) => {
 		// send data
 		res.send({ auth, tokenData });
 	} else {
-
 		// send error
 		res.status(403).send('invalid username or password');
 	}

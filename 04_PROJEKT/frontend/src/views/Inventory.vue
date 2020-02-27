@@ -154,22 +154,32 @@ export default {
 		},
 		// lends an item
 		async lendItems() {
-
+			/** forms the data to:
+			 * [
+			 * 	PK_items_ID,
+			 * ]
+			 */
 			var idList = this.selectedItems.map(item => item['PK_items_ID']) 
-
-
 			try {
+				// html request
 				await axios().post('/student/lendings/', idList )
-
-				this.$emit("message", { type: "success", text: 'Material ausgeliehen', timeout: 1000 });
+				// send message
+				this.$emit("message", { 
+					type: "success", 
+					text: 'Material ausgeliehen', 
+					timeout: 1000 
+				});
 			} catch (error) {
 				console.error(error);
-				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				this.$emit("message", { 
+					type: "error",
+					text: error.message,
+					timeout: 0 
+				});
 			}
 			this.selectedItems = [];
 			// redownload items
 			this.loadItems()
-
 		},
 	}
 }

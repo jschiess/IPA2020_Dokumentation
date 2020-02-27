@@ -3,7 +3,6 @@
 var express = require('express');
 var cors = require('cors');
 
-
 // import the middleware
 // var isStudent = require('./middleware/isStudent');
 var isTeacher = require('./middleware/isTeacher');
@@ -20,7 +19,7 @@ const PORT = 3000;
 // initialize the library
 var app = express();
 
-// use cors 
+// use cors
 app.use(cors());
 
 // logger
@@ -28,7 +27,6 @@ app.use(function (req, res, next) {
 	console.log(`${new Date().toLocaleTimeString()} ${new Date().toLocaleDateString()} | ${req.method} request on ${req.originalUrl}`);
 	next();
 });
-
 
 // converts the body to json format
 app.use(express.json());
@@ -41,6 +39,5 @@ app.use('/student', authorization, studentRoutes);
 
 // teacher routes
 app.use('/teacher', authorization, isTeacher, teacherRoutes);
-
 
 app.listen(PORT, console.log('listening on port ' + PORT));

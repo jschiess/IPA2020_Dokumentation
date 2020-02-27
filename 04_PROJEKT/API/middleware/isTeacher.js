@@ -1,7 +1,6 @@
 // Middleware function
 // checks if the users role is teacher
 function isTeacher(req, res, next) {
-
 	// get the role from the previous middleware function
 	var role = req.decodedToken.role;
 
@@ -10,7 +9,6 @@ function isTeacher(req, res, next) {
 		// send user to the next function in the stack
 		next();
 	} else {
-
 		// send error
 		res.sendStatus(403);
 	}

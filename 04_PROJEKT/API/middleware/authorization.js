@@ -2,7 +2,7 @@
 var jwt = require('jsonwebtoken');
 
 // authorization function
-async function checkAuthorization(req, res, next) {
+async function checkAuthorization (req, res, next) {
 	var head = req.headers.authorization;
 
 	// check if head is not undefined
