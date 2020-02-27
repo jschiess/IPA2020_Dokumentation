@@ -19,7 +19,7 @@ exports.up = async function (knex) {
 	});
 	await knex.raw("ALTER TABLE `inventory`.`roles` CHANGE COLUMN `PK_roles_ID` `PK_roles_ID` INT(11) NOT NULL AUTO_INCREMENT")
 
-	// create the  manufacturers
+	// create the  manufacturers table
 	await knex.schema.createTable('manufacturers', table => {
 		table.integer('PK_manufacturers_ID').primary()
 		table.string('manufacturersName')
