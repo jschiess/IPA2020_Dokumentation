@@ -21,7 +21,14 @@
 										
 									v-row( justify='center' )
 										v-col(md='3')
-											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.manufacturersId" :items="manufacturers" item-value='manufacturersId' item-text='manufacturersName' label="Hersteller" )
+											v-autocomplete(
+												:rules='[v => !!v || "Fehlende Angaben"]' 
+												outlined  
+												v-model="form.manufacturersId" 
+												:items="manufacturers" 
+												item-value='manufacturersId' 
+												item-text='manufacturersName' 
+												label="Hersteller" )
 										v-col(md='3')
 											v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' outlined  v-model="form.typesId" :items="types" item-value='typesId' item-text='typesName' label="Typ" )
 									v-row( justify='center' )

@@ -90,8 +90,6 @@ router.get('/lendings', async (req, res) => {
 	res.send(result);
 });
 
-
-
 // edit item
 router.put('/inventory/:id', async (req, res) => {
 	// get id from url
