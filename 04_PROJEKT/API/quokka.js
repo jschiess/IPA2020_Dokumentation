@@ -1,5 +1,0 @@
-var item = { "item": { "PK_itemsClass_ID": 1, "itemsClassName": "Raspberry PI model 3s 16gb ram", "manufacturersName": "Raspberry Pi", "typesName": "Raspberry Pi", "description": "micro computer", "items": [{ "PK_items_ID": 6, "serialnumber": "3388855002-22233748542asdfasdf", "createdAt": "2020-02-26T14:57:05.000Z", "FK_locations_ID": 2, "FK_itemsClass_ID": 1, "lentTo": null, "PK_itemsClass_ID": 1, "itemsClassName": "Raspberry PI model 3s 16gb ram", "description": "micro computer", "FK_types_ID": 3, "FK_manufacturers_ID": 3, "PK_types_ID": 3, "typesName": "Raspberry Pi", "PK_manufacturers_ID": 3, "manufacturersName": "Raspberry Pi", "PK_locations_ID": 2, "locationsName": "LOA04", "PK_users_ID": null, "username": null }] }, "header": { "text": "Menge", "value": "amount" } };
-
-var kek = item.item.items;
-
-kek
