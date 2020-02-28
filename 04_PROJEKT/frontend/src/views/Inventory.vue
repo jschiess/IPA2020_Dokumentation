@@ -16,6 +16,10 @@
 						:items='items'
 						:headers='headers'
 						)
+							template(v-slot:item.amount='{ item}')
+								td {{ item.items.filter(item => !item.username).length }}
+							template(v-slot:item.totalAmount='{ item}')
+								td {{ item.items.length }}
 							template( v-slot:expanded-item="{ headers, item }" )
 								td(  style="padding:5px 10px;" :colspan='headers.length' )
 									v-data-table(
@@ -32,8 +36,17 @@
 										) 
 										//- custom changes to defualt template
 										template(v-slot:header.data-table-select='item')
-										template(v-slot:item.action='{ item }' v-if='user.role === "teacher"') 
-											v-btn.elevation-0( @click="deleteItem( item )" small tile color="red" dark ) x
+										template(
+											v-slot:item.action='{ item }' 
+											v-if='user.role === "teacher"'
+										) 
+											v-btn.elevation-0( 
+												@click="deleteItem( item )" 
+												small 
+												tile 
+												color="red" 
+												dark 
+											) x
 										template(v-slot:item.data-table-select='{  isSelected, select, item }') 
 											v-simple-checkbox( :disabled='!!item.lentTo' :value="isSelected" @input="select($event)")
 										template( v-slot:item.serialnumber="{ item }" )
@@ -74,18 +87,20 @@ export default {
 			headers: [
 				
 				{ text: "ID", value: "PK_itemsClass_ID" },
-				{ text: "name", value: "itemsClassName" },
-				{ text: 'typ', value: 'typesName'},
+				{ text: "Name", value: "itemsClassName" },
+				{ text: 'Typ', value: 'typesName'},
 				{ text: 'Hersteller', value: 'manufacturersName'},
-				{ text: 'beschreibung', value: 'description'},
+				{ text: 'Beschreibung', value: 'description'},
+				{ text: 'Verfügbare Menge', value: 'amount'},
+				{ text: 'Totale Menge', value: 'totalAmount'},
 				{ text: "", value: "data-table-expand" }
 			],
 			subheaders: [
-				{ text: "Id", value: "PK_items_ID" },
-				{ text: "serialnumber", value: "serialnumber" },
+				{ text: "ID", value: "PK_items_ID" },
+				{ text: "Serialnumber", value: "serialnumber" },
 				{ text: "Ablageort", value: "locationsName" },
 				{ text: 'Ausgeliehen von', value: 'username'},
-				{ text: 'aktion', value: 'action'},
+				{ text: 'Aktion', value: 'action'},
 				
 			],
 			search: "",

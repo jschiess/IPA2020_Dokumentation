@@ -70,8 +70,6 @@ export default {
 			item: {},
 			form: {
 				itemsClassId: '',
-
-
 				locationsId: '',
 				itemsClassName: '',
 				description: '',

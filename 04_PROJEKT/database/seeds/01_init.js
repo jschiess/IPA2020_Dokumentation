@@ -75,26 +75,50 @@ exports.seed = async function (knex) {
 			]);
 		});
 
+	var users = [
+		{
+			username: 'scjo',
+			password: 'kek',
+			role: 1,
+		},
+		{
+			username: 'peju',
+			password: 'iluvtfBern',
+			role: 1,
+		},
+		{
+			username: 'sika',
+			password: 'okBoomer',
+			role: 1,
+		},
+		{
+			username: 'in17scma',
+			password: 'gibbix12345',
+			role: 2,
+		},
+		{
+			username: 'in19sika',
+			password: 'passwort1',
+			role: 2,
+		},
+		{
+			username: 'In18frch',
+			password: 'Csgopro1337',
+			role: 2,
+		},
+	]
+
 	// Deletes ALL existing entries
 	await knex('users').del()
 		.then(async function () {
 			// Inserts seed entries
-			return knex('users').insert([
-				{
-					username: 'josc',
-					password: await bcrypt.hash('kek', 10),
-					FK_roles_ID: 1,
-				},
-				{
-					username: 'in17scma',
-					password: await bcrypt.hash('gibbix12345', 10),
-					FK_roles_ID: 2,
-				},
-				{
-					username: 'in19sika',
-					password: await bcrypt.hash('passwort1', 10),
-					FK_roles_ID: 2,
-				},
-			]);
+			for (var user of users)
+				await knex('users').insert([
+					{
+						username: user.username,
+						password: await bcrypt.hash(user.password, 10),
+						FK_roles_ID: user.role,
+					},
+				]);
 		});
 };
