@@ -21,17 +21,16 @@ exports.up = async function (knex) {
 
 exports.down = async function (knex) {
 	await knex.schema.table('items', (table) => {
-		table.dropForeign('FK_locations_ID');
-		table.dropForeign('FK_loclentToations_ID');
-		table.dropForeign('FK_itemsClass_ID');
-	});
+		table.dropForeign('FK_locations_ID')
+		table.dropForeign('lentTo')
+		table.dropForeign('FK_itemsClass_ID')
+	})
 
 	await knex.schema.table('users', (table) => {
-		table.dropForeign('FK_roles_ID');
+		table.dropForeign('FK_roles_ID')
 	});
-
-	await knex.schema.table('items', (table) => {
-		table.dropForeign('FK_types_ID');
-		table.dropForeign('FK_manufacturers_ID');
+	await knex.schema.table('itemsClass', (table) => {
+		table.dropForeign('FK_types_ID')
+		table.dropForeign('FK_manufacturers_ID')
 	});
 };
