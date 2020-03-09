@@ -38,7 +38,7 @@
 										template(v-slot:header.data-table-select='item')
 										template(
 											v-slot:item.action='{ item }' 
-											v-if='user.role === "teacher"'
+											v-if='isTeacher'
 										) 
 											v-btn.elevation-0( 
 												@click="deleteItem( item )" 
@@ -49,15 +49,15 @@
 											) x
 										template(v-slot:item.data-table-select='{  isSelected, select, item }') 
 											v-simple-checkbox( :disabled='!!item.lentTo' :value="isSelected" @input="select($event)")
-										template( v-slot:item.serialnumber="{ item }" )
+										template( v-slot:item.serialnumber="{ item }" v-if='isTeacher')
 											v-edit-dialog(@save='changeItem(item)') {{ item.serialnumber}}
 												template(v-slot:input)
 													v-text-field(counter label='edit' v-model='item.serialnumber') 
-										template( v-slot:item.locationsName="{ item }" )
+										template( v-slot:item.locationsName="{ item }" v-if='isTeacher')
 											v-edit-dialog(@save='changeItem(item)') {{ item.locationsName}}
 												template(v-slot:input)
 													v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary" v-model="item.FK_locations_ID" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" )
-							template(v-slot:top)
+							template(v-slot:top) 
 								v-row()
 									v-spacer()
 									v-spacer
@@ -65,7 +65,7 @@
 										v-text-field(v-model="search" solo label='Search' append-icon="mdi-layers-search-outline" )
 									v-spacer
 									v-col( md="2" lg="2" sm="2"  )
-										v-btn(dark color="success" v-if='user.role === "teacher"' link to="/newMaterial" ) new device
+										v-btn(dark color="success" v-if='isTeacher' link to="/newMaterial" ) new device
 									v-col( md="2" lg="2" sm="2" )
 										v-btn( @click="lendItems" color="secondary lighten-1"  :disabled='!selectedItems.length' ) Ausleihen
 											
@@ -85,7 +85,6 @@ export default {
 			selectedItems: [],
 			items: [],
 			headers: [
-				
 				{ text: "ID", value: "PK_itemsClass_ID" },
 				{ text: "Name", value: "itemsClassName" },
 				{ text: 'Typ', value: 'typesName'},
@@ -110,13 +109,14 @@ export default {
 	},
 	// dynamic data
 	computed: {
+		isTeacher: function () {
+			return this.$store.getters.isTeacher
+		},
 		// checks if the user is logged in or not
 		loggedIn: function() {return this.$store.state.loggedIn},
 		// gets global user information username, role etc..
 		user: function() {return this.$store.state.user},
 	},
-	// loads the locations from the api
-	
 	async mounted() {
 		// load items
 		this.loadItems()
@@ -129,12 +129,14 @@ export default {
 	},
 	methods: {
 		async loadLocations() {
-			try {
-				var response = await axios().get('/teacher/locations');
-				this.locations = response.data;
-			} catch (error) {
-				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-				console.error(error);
+			if (this.isTeacher) {
+				try {
+					var response = await axios().get('/teacher/locations');
+					this.locations = response.data;
+				} catch (error) {
+					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+					console.error(error);
+				}
 			}
 		},
 		async loadItems() {
@@ -150,11 +152,13 @@ export default {
 		},
 		// deletes the item form the lendings
 		async deleteItem(item){
+			console.log(item.PK_items_ID);
+			
 			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
 				try {
 					// delete entry
-					await axios().delete('/teacher/inventory/'+ item);
+					await axios().delete('/teacher/inventory/'+ item.PK_items_ID);
 					// removes the item from the lokal storage
 					this.loadItems();
 					this.selectedItems = '';
@@ -173,7 +177,6 @@ export default {
 					// axios request
 					await axios().put('/teacher/inventory/'+ item.PK_items_ID, item)
 				
-
 				} catch (error) {
 					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
@@ -191,6 +194,7 @@ export default {
 			 * 	PK_items_ID,
 			 * ]
 			 */
+			// reformat data
 			var idList = this.selectedItems.map(item => item['PK_items_ID']) 
 			try {
 				// html request

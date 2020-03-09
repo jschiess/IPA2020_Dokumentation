@@ -1,3 +1,7 @@
+/**
+ * defines the routes for the teacher role
+ */
+
 // import packages
 var express = require('express');
 // import database connection
@@ -19,7 +23,7 @@ router.get('/locations', async (req, res) => {
 	res.send(result);
 });
 
-// get all types
+
 router.get('/types', async (req, res) => {
 	try {
 		// database request
@@ -223,20 +227,15 @@ router.post('/itemsClass', async (req, res) => {
 router.delete('/lendings/:id', async (req, res) => {
 	var id = req.params.id;
 	try {
-		// database request
 		await knex('items')
 			.where('PK_items_ID', id)
 			.update({
 				lentTo: null
 			});
-
-		// send Status 200
 		res.sendStatus(200);
 		// error handling
 	} catch (error) {
-		// log error
 		console.error(error);
-		// send Status 500
 		res.sendStatus(500);
 	}
 });

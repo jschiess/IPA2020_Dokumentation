@@ -1,3 +1,4 @@
+// import packages
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate';
@@ -13,16 +14,22 @@ export default new Vuex.Store({
 	plugins: [createPersistedState()],
 	mutations: {
 		setToken(state, payload) {
-			state.token = payload
+			state.token = payload;
 		},
 		setLoggedIn(state, payload) {
 			state.loggedIn = payload;
 		},
 		setUserData(state, payload) {
-			state.user = payload
+			state.user = payload;
+		}
+	},
+	getters: {
+		isTeacher: state => {
+			return (state.user.role === 'teacher') ? true : false;
 		}
 	},
 	actions: {
+		// clears the data out of the state
 		clearData: function (context) {
 			context.commit('setToken', '')
 			context.commit('setLoggedIn', false)
