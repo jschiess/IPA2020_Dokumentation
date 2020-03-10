@@ -1,5 +1,8 @@
 # Inventar-App
 
+Diese applikation wurde entwickelt um den den Inventar der Abteilung Informatik erstllt. Es wurde im Rahmen einer IPA, von Josiah Schiess im Jahr 2020, entwickelt.
+
+
 
 ## Schnittstellen
 
@@ -11,4 +14,8 @@ In dem `./model` Order sind die einzelnen Modelle der Tabellen gespeichert. Dies
 
 ### Graphinserts
 
+// todo: add endpoint to graphinserts
+
 ## graphql schnittstellen
+
+Graphql wurde mit dem objection-graphql package automatisch generiert. 
