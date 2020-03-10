@@ -2,11 +2,32 @@
 
 Diese applikation wurde entwickelt um den den Inventar der Abteilung Informatik erstllt. Es wurde im Rahmen einer IPA, von Josiah Schiess im Jahr 2020, entwickelt.
 
+### Technologien
+- UI
+	- Vue
+      - Vuetify
+      - Vue-router
+      - Vuex
+      	- vuex-persistant-state
+    - Axios
+- API
+	- Bcrypt
+	- JWT
+	- express
+	- express-graphql
+	- [GraphQL](https://github.com/facebook/graphql)
+	- [objection-graphql](https://github.com/Vincit/objection-graphql)
+	- knex
+- Datenbank
+	- knex
+	- [Objection](https://vincit.github.io/objection.js/)
 
+  
 
 ## Schnittstellen
 
 ## Knex datenbank
+
 
 
 ## ORM
