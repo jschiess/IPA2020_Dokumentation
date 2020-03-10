@@ -4,8 +4,9 @@ var express = require('express');
 var cors = require('cors');
 const { Model } = require('objection');
 var graphqlHTTP = require('express-graphql');
-var graphQlBuilder = require('objection-graphql');
+var graphQLBuilder = require('objection-graphql');
 const knex = require('./knex');
+/*eslint no-unused-vars: 0*/
 const {
 	GraphQLObjectType, GraphQLInputObjectType,
 	GraphQLNonNull, GraphQLString, GraphQLInt, buildSchema
@@ -24,8 +25,7 @@ var publicRoutes = require('./routes/public');
 
 
 //import models
-var Items = require('./models/Items');
-
+const { Locations, Roles, Users, Items, ItemsClass, Manufacturers, Types } = require('./models/all');
 
 // global variable declaration
 const PORT = 3000;
@@ -50,13 +50,42 @@ function createSchema() {
 	Model.knex(knex);
 	const builder = graphQLBuilder
 		.builder()
-		.Model(Items);
+		.model(Roles, {
+			listFieldName: 'roles',
+			fieldName: 'role'
+		})
+		.model(Items, {
+			listFieldName: 'items',
+			fieldName: 'item'
+		})
+		.model(ItemsClass, {
+			listFieldName: 'itemsClasses',
+			fieldName: 'itemsclass'
+		})
+		.model(Manufacturers, {
+			listFieldName: 'manufacturers',
+			fieldName: 'manufacturer'
+		})
+		.model(Types, {
+			listFieldName: 'types',
+			fieldName: 'type'
+		})
+		.model(Locations, {
+			listFieldName: 'locations',
+			fieldName: 'location'
+		})
+		.model(Users, {
+			listFieldName: 'users',
+			fieldName: 'user'
+		});
 
 	return builder.build();
 }
 
 app.use('/graphql', graphqlHTTP({
 	schema: createSchema(),
+	graphiql: true,
+
 }));
 
 // // public routes
