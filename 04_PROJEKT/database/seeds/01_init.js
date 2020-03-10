@@ -78,34 +78,36 @@ exports.seed = async function (knex) {
 	var users = [
 		{
 			username: 'scjo',
+			firstname: 'josiah',
+			lastname: 'schiess',
 			password: 'kek',
 			role: 1,
 		},
-		{
-			username: 'peju',
-			password: 'iluvtfBern',
-			role: 1,
-		},
-		{
-			username: 'sika',
-			password: 'okBoomer',
-			role: 1,
-		},
-		{
-			username: 'in17scma',
-			password: 'gibbix12345',
-			role: 2,
-		},
-		{
-			username: 'in19sika',
-			password: 'passwort1',
-			role: 2,
-		},
-		{
-			username: 'In18frch',
-			password: 'Csgopro1337',
-			role: 2,
-		},
+		// {
+		// 	username: 'peju',
+		// 	password: 'iluvtfBern',
+		// 	role: 1,
+		// },
+		// {
+		// 	username: 'sika',
+		// 	password: 'okBoomer',
+		// 	role: 1,
+		// },
+		// {
+		// 	username: 'in17scma',
+		// 	password: 'gibbix12345',
+		// 	role: 2,
+		// },
+		// {
+		// 	username: 'in19sika',
+		// 	password: 'passwort1',
+		// 	role: 2,
+		// },
+		// {
+		// 	username: 'In18frch',
+		// 	password: 'Csgopro1337',
+		// 	role: 2,
+		// },
 	]
 
 	// Deletes ALL existing entries
@@ -116,6 +118,8 @@ exports.seed = async function (knex) {
 				await knex('users').insert([
 					{
 						username: user.username,
+						firstname: user.firstname,
+						lastname: user.lastname,
 						password: await bcrypt.hash(user.password, 10),
 						FK_roles_ID: user.role,
 					},

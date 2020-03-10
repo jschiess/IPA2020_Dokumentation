@@ -1,6 +1,6 @@
 
 exports.up = async function (knex) {
-
+	const uuid = require('uuid-v4');
 	// create users table
 	await knex.schema.createTable('users', table => {
 		table.increments('PK_users_ID').primary()
@@ -52,6 +52,7 @@ exports.up = async function (knex) {
 	await knex.schema.createTable('items', table => {
 		table.increments('PK_items_ID').primary()
 		table.string('serialnumber').notNullable()
+		table.uuid('uuid').notNullable().defaultTo(uuid())
 		table.timestamp('createdAt').defaultTo(knex.fn.now());
 
 		// foreign keys

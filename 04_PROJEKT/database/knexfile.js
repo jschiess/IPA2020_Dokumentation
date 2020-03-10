@@ -3,22 +3,11 @@
 module.exports = {
 
 	development: {
-		client: 'mysql',
-		version: '8.0',
-		connection: {
-			host: 'localhost',
-			database: 'inventory',
-			user: 'root',
-			password: 'admin',
-			insecureAuth: true,
-			port: 3306
-		},
-		migrations: {
-			directory: './migrations'
-		},
-		seeds: {
-			directory: './seeds'
-		}
+		client: 'sqlite3',
+		connection: { filename: 'database.sqlite' },
+		migrations: './migrations',
+		seeds: './seeds',
+		useNullAsDefault: true
 	},
 
 	staging: {
