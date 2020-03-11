@@ -57,6 +57,7 @@ export default {
 	computed: {
 		loggedIn() {return this.$store.state.loggedIn},
 		user() {return this.$store.state.user},
+		isTeacher() {return this.$store.getters.isTeacher}
 	},
 	methods: {
 		logout() {this.$emit('logout')},

@@ -1,10 +1,11 @@
-// import the required dependencies
+/**
+ * Author: Josiah Schiess
+ * routes that the client with the role student kann access
+ */
 var express = require('express');
 var router = express.Router();
-// database request
-// imports knex
 var knex = require('../knex.js');
-// get all inventory
+
 router.get('/inventory', async (req, res) => {
 	try {
 		// database request
@@ -67,12 +68,8 @@ router.get('/inventory', async (req, res) => {
 	res.send(result);
 });
 
-// get lendings
 router.get('/lendings', async (req, res) => {
 	try {
-		// id of user from taken from token
-		var userId = req.decodedToken.userId;
-		// database request
 		var result = await knex('items')
 			.leftJoin('itemsClass', 'FK_itemsClass_ID', 'PK_itemsClass_ID')
 			.join('types', 'PK_types_ID', 'FK_types_ID')
@@ -80,7 +77,6 @@ router.get('/lendings', async (req, res) => {
 			.join('locations', 'PK_locations_ID', 'FK_locations_ID')
 			.join('users', 'PK_users_ID', 'lentTo')
 			.select(
-				'PK_users_ID',
 				'PK_items_ID as itemId',
 				'typesName',
 				'locationsName',
@@ -88,19 +84,15 @@ router.get('/lendings', async (req, res) => {
 				'description',
 				'manufacturersName',
 				'serialNumber'
-			).where('PK_users_ID', userId);
-		// error handling
+			);
 	} catch (error) {
-		// log error
 		console.error(error);
-		// send Status 500
 		res.sendStatus(500);
 	}
-	// send response
 	res.send(result);
 });
 
-// new lending
+
 router.post('/lendings', async (req, res) => {
 	// id of user from taken from token
 	var userId = req.decodedToken.userId;
@@ -133,7 +125,6 @@ router.post('/lendings', async (req, res) => {
 	}
 });
 
-// delete lending
 router.delete('/lendings/:id', async (req, res) => {
 	// id of user from taken from token
 	var userId = req.decodedToken.userId;

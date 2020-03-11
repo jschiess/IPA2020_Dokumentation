@@ -29,11 +29,7 @@
 </template>
 
 <script>
-
-// import statements
 import axios from '@/api'
-
-// main export
 export default {
 	name: 'Lendings',
 	// data
@@ -43,13 +39,13 @@ export default {
 			selectedItems: [],
 			items: [],
 			headers: [
-				{ text: "ID", value: "itemId" },
-				{ text: 'Typ', value: 'typesName'},
-				{ text: 'Hersteller', value: 'manufacturersName'},
-				{ text: 'Ablageort', value: 'locationsName'},
-				{ text: 'Beschreibung', value: 'description'},
-				{ text: "Serialnummer", value: "serialNumber" },
-				{ text: "Ausgeliehen von", value: 'username'},
+				{ text: "ID", value: "PK_items_ID" },
+				{ text: 'Typ', value: 'itemClass.types.typesName'},
+				{ text: 'Hersteller', value: 'itemClass.manufacturers.manufacturersName'},
+				{ text: 'Ablageort', value: 'location.locationsName'},
+				{ text: 'Beschreibung', value: 'itemClass.description'},
+				{ text: "Serialnummer", value: "serialnumber" },
+				{ text: "Ausgeliehen von", value: 'user.fullname'},
 				{ text: 'aktion', value: 'actions'},
 			],
 			search: "",
@@ -58,14 +54,13 @@ export default {
 	},
 	// dynamic data
 	computed: {
-		// checks if the user is logged in or not
-		loggedIn: function() {return this.$store.state.loggedIn},
-		// gets global user information username, role etc..
+
 		user: function() {return this.$store.state.user},
-		// filters the results based on showallitems boolean
+		isTeacher: function () {
+			return this.$store.getters.isTeacher
+		},
 		filteredItems: function () {
 			if(this.showAllItems) {
-				// no filtering
 				return this.items
 			} else {
 				// filters list so only users with the users username are shown
@@ -73,67 +68,66 @@ export default {
 			}
 		}
 	},
-	// once the html is mounted this function is called
 	mounted() {
-		// init script
 		this.init()
 	},
-	// methods
 	methods: {
-		// removes item from array and sends request to the API
 		async deleteLending(item){
-			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
-				// delete entry
+
 				try {
-					var url = ((this.user.role === 'teacher')? '/teacher': '/student' ) +'/lendings/' + item.itemId 
+					var url = ((this.isTeacher)? '/teacher': '/student' ) +'/lendings/' + item.PK_items_ID 
 					await axios().delete(url);
 					this.init()
-					
-
-					// removes the item from the lokal storage
 					this.$emit("message", { type: "success", text: 'Ausleihung aufgelöst', timeout: 1000 });
 				
 				} catch (error) {
 					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-	
 				}
-
-
 			}
 		},
 		// init methode
 		async init() {
+
+			let response = await axios().post('graphql', {
+				query: `
+					query{
+						items( lentToIsNull: false ){
+							PK_items_ID
+							location{
+								locationsName
+							}
+							itemClass{
+								description
+								manufacturers{
+									manufacturersName
+								}
+								types{
+									typesName
+								}
+							}
+							user{
+								fullname
+							}
+							serialnumber
+						}
+					}`
+			})
+			let items = response.data.data.items;
+
+
+			this.items = items;
+			this.loading = false
 			
-			// get Data from API
-			var response;
-			// check if teacher or student
-			if(this.user.role === 'teacher') {
-				try {
-					// html request
-					response = await axios().get('/teacher/lendings')
-					// sets data
-					this.items = response.data;
-					this.loading = false
-				} catch (error) {
-					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-					console.error(error);
-				}
-			} else {
-				try {
-					response = await axios().get('/student/lendings')
-					// sets data
-					this.items = response.data;
-					// removes the loading bar
-					this.loading = false
-				} catch (error) {
-					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-					console.error(error);
-				}
-				// html request
-				
-			}
+			// try {
+			// 	this.items = await lendings()
+			// 	this.loading = false
+			// } catch (error) {
+			// 	this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+			// 	console.error(error);
+			// }
+			
 
 		},
 		

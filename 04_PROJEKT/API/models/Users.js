@@ -55,10 +55,10 @@ class Users extends Model {
 				}
 			},
 			lent: {
-				relation: Model.BelongsToOneRelation,
+				relation: Model.HasManyRelation,
 				modelClass: Items,
 				join: {
-					from: 'users.PK_items_ID',
+					from: 'users.PK_users_ID',
 					to: 'items.lentTo'
 				}
 			}

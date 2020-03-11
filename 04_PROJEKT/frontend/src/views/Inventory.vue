@@ -17,7 +17,7 @@
 						:headers='headers'
 						)
 							template(v-slot:item.amount='{ item}')
-								td {{ item.items.filter(item => !item.username).length }}
+								td {{ item.items.filter(item => !item.fullname).length }}
 							template(v-slot:item.totalAmount='{ item}')
 								td {{ item.items.length }}
 							template( v-slot:expanded-item="{ headers, item }" )
@@ -54,11 +54,11 @@
 												template(v-slot:input)
 													v-text-field(counter label='edit' v-model='item.serialnumber') 
 										template( v-slot:item.locationsName="{ item }" v-if='isTeacher')
-											v-edit-dialog(@save='changeItem(item)') {{ item.locationsName}}
+											v-edit-dialog(@save='changeItem(item)') {{ item.location.locationsName}}
 												template(v-slot:input)
-													v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary" v-model="item.FK_locations_ID" :items="locations" item-value='locationsId' item-text='locationsName' label="Standort" )
+													v-autocomplete(:rules='[v => !!v || "Fehlende Angaben"]' color="primary" v-model="item.location.FK_locations_ID" :items="locations" item-value='PK_locations_ID' item-text='locationsName' label="Standort" )
 							template(v-slot:top) 
-								v-row()
+								v-row() 
 									v-spacer()
 									v-spacer
 									v-col(md="6" lg="5" sm="4")
@@ -75,7 +75,7 @@
 <script>
 // packgae imports
 import axios from "@/api";
-
+import { loadLocations, loadItems} from '../middleware'
 export default {
 	name: 'Inventory',
 	// Data 
@@ -87,8 +87,8 @@ export default {
 			headers: [
 				{ text: "ID", value: "PK_itemsClass_ID" },
 				{ text: "Name", value: "itemsClassName" },
-				{ text: 'Typ', value: 'typesName'},
-				{ text: 'Hersteller', value: 'manufacturersName'},
+				{ text: 'Typ', value: 'types.typesName'},
+				{ text: 'Hersteller', value: 'manufacturers.manufacturersName'},
 				{ text: 'Beschreibung', value: 'description'},
 				{ text: 'Verfügbare Menge', value: 'amount'},
 				{ text: 'Totale Menge', value: 'totalAmount'},
@@ -97,8 +97,8 @@ export default {
 			subheaders: [
 				{ text: "ID", value: "PK_items_ID" },
 				{ text: "Serialnumber", value: "serialnumber" },
-				{ text: "Ablageort", value: "locationsName" },
-				{ text: 'Ausgeliehen von', value: 'username'},
+				{ text: "Ablageort", value: "location.locationsName" },
+				{ text: 'Ausgeliehen von', value: 'user.fullname'},
 				{ text: 'Aktion', value: 'action'},
 				
 			],
@@ -114,52 +114,28 @@ export default {
 		},
 		// checks if the user is logged in or not
 		loggedIn: function() {return this.$store.state.loggedIn},
-		// gets global user information username, role etc..
 		user: function() {return this.$store.state.user},
 	},
 	async mounted() {
-		// load items
 		this.loadItems()
-
-		// loadlocations
 		this.loadLocations()
-
-		// disable loading 
-		this.loading = false
 	},
 	methods: {
 		async loadLocations() {
-			if (this.isTeacher) {
-				try {
-					var response = await axios().get('/teacher/locations');
-					this.locations = response.data;
-				} catch (error) {
-					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-					console.error(error);
-				}
-			}
+			let response = await loadLocations()
+			this.locations = response.locations 
+		
 		},
 		async loadItems() {
-			try {
-				var response = await axios().get("/student/inventory")
-			} catch (error) {
-				// send message to parent prop
-				console.error(error);
-				this.$emit("message", { type: "error", text: error.message, timeout: 0 });
-			}
-			//set itmes
-			this.items = response.data;	
+			let response = await loadItems()
+			this.items = response.itemsClasses.filter(el => el.items.length>0)
+
+			this.loading = false
 		},
-		// deletes the item form the lendings
 		async deleteItem(item){
-			console.log(item.PK_items_ID);
-			
-			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
 				try {
-					// delete entry
 					await axios().delete('/teacher/inventory/'+ item.PK_items_ID);
-					// removes the item from the lokal storage
 					this.loadItems();
 					this.selectedItems = '';
 				} catch (error) {
@@ -168,21 +144,14 @@ export default {
 				}
 			}
 		},
-		// alters item 
 		async changeItem(item) {
-			// asks for confirmation
 			if(confirm('sind sie sicher?')) {
-				// delete entry
 				try {
-					// axios request
 					await axios().put('/teacher/inventory/'+ item.PK_items_ID, item)
-				
 				} catch (error) {
 					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
 				}
-
-				// removes the item from the lokal storage
 				this.loadItems()
 			}
 			

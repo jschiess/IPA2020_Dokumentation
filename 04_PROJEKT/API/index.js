@@ -14,8 +14,8 @@ app.use(express.json());
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
+app.use(morgan('combined'));
 
 app.use('/api', routes);
-
 
 app.listen(PORT, console.log('listening on port ' + PORT));

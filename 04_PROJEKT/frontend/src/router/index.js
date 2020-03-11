@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
 	// checks if the user is loggedIn
 	const loggedIn = store.state.token
 	// checks if the user is a teacher
-	const isTeacher = store.state.role === 'teacher'
+	const isTeacher = store.getters.isTeacher
 
 	// if the user is not logged in and if authorization is required
 	if (authRequired && !loggedIn) {

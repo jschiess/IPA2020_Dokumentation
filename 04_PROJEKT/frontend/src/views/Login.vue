@@ -9,55 +9,42 @@
 								v-toolbar( color="primary" dark  )
 									v-toolbar-title Login
 								v-card-text 	
-									v-text-field( v-model="data.username"  label='Username' type="name" )
-									v-text-field( v-model="data.password"  label='Password' type="password" )
+									v-text-field( v-model="form.username"  label='Username' type="name" )
+									v-text-field( v-model="form.password"  label='Password' type="password" )
 								v-card-actions
 									v-spacer
 									v-btn( @click="login" color="success" dark ) login
 										v-icon( right ) mdi-login
 </template>
 <script>
-import axios from "@/api";
-
 export default {
-	name: "home",
-	props: ["loggedIn"],
+	name: "login",
 	data() {
 		return {
-			data: {
+			form: {
+				username: '',
 				password: '',
-				username: ''
 			}
 		};
 	},
 	methods: {
 		login: async function() {
-			// if the form has valid data
 			if (this.$refs.form.validate()) {
-
-				try {
 				
-					// send request to /login
-					var response = await axios().post("/login", this.data);
-
-					// get token from response.data
-					var token = response.data.auth.split(" ")[1];
-					var userData = response.data.tokenData
-					// var user = response.data.user;
-
-					// save token in vuex store 
-					this.$store.dispatch('login', {token, userData})
-
-					// emit to parent element to display message
+				try {
 					this.$emit("message", { type: "success", text: 'erfolgreich eingeloggt', timeout: 1000 });
-					// send user to path home
-					this.$router.push("/");
+
+					this.$store.dispatch('login', this.form).then(() => {
+						
+						this.$router.push("/");
+					})
+
 				} catch (error) {
-					this.data.password = ''
-					// send message to parent prop
-					console.error(error);
 					this.$emit("message", { type: "error", text: error.message, timeout: 0 });
+				
 				}
+
+
 			}
 		}
 	}

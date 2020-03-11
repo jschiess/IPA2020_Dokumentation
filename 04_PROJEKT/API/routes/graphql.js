@@ -21,7 +21,7 @@ function createSchema() {
 		})
 		.model(ItemsClass, {
 			listFieldName: 'itemsClasses',
-			fieldName: 'itemsclass'
+			fieldName: 'itemsClass'
 		})
 		.model(Manufacturers, {
 			listFieldName: 'manufacturers',

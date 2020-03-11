@@ -9,6 +9,7 @@ var router = express.Router();
 
 // login path
 router.post('/login', async (req, res) => {
+
 	// get username and password from body
 	var { username, password } = req.body;
 
@@ -17,7 +18,14 @@ router.post('/login', async (req, res) => {
 		// var user = await knex('users')
 		// 	.join('roles', 'users.FK_roles_ID', 'roles.PK_roles_ID')
 		// 	.where({ username }).first();
-		var user = await Users.query().where({ username });
+		var user = await Users.query()
+			.innerJoin('roles', 'roles.PK_roles_ID', 'users.FK_roles_ID')
+			.where({ username })
+			.select('roles.*', 'users.*')
+			.first();
+		console.log(user);
+
+
 
 
 		// database password is read out of the database
