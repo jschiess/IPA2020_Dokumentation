@@ -1,6 +1,6 @@
 // import packages
 var express = require('express');
-var knex = require('../knex.js');
+const { Users } = require('../models/all');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
@@ -14,17 +14,16 @@ router.post('/login', async (req, res) => {
 
 	try {
 		// user matching the username is gotten from the database
-		var user = await knex('users')
-			.join('roles', 'users.FK_roles_ID', 'roles.PK_roles_ID')
-			.where({ username }).first();
+		// var user = await knex('users')
+		// 	.join('roles', 'users.FK_roles_ID', 'roles.PK_roles_ID')
+		// 	.where({ username }).first();
+		var user = await Users.query().where({ username });
+
 
 		// database password is read out of the database
 		var databasePassword = user.password;
 	} catch (error) {
-		// log error
 		console.error(error);
-
-		// send error
 		res.status(403).send('invalid username or password');
 	}
 
@@ -41,11 +40,8 @@ router.post('/login', async (req, res) => {
 
 		// because of convention Bearer is add in the beginning
 		var auth = 'Bearer ' + token;
-
-		// send data
 		res.send({ auth, tokenData });
 	} else {
-		// send error
 		res.status(403).send('invalid username or password');
 	}
 });

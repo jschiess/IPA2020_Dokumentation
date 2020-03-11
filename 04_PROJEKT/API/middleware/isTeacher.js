@@ -1,5 +1,11 @@
-// Middleware function
-// checks if the users role is teacher
+
+/**
+ * Author: Josiah Schiess
+ * checks if roles is techer
+ * 
+ */
+
+
 function isTeacher(req, res, next) {
 	// get the role from the previous middleware function
 	var role = req.decodedToken.role;
